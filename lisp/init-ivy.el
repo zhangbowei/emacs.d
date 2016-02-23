@@ -23,11 +23,11 @@ IF NUM is 1, open the file in another window."
 
 (defun counsel-git-grep (&optional num)
   "Grep in the current git repository.
-If NUM is not nil, results are displayed in new window."
+If NUM is 1, results are displayed in new window."
   (interactive "P")
   (let ((fn (lambda (num val)
               (let ((lst (split-string val ":")))
-                (funcall (if num 'find-file-other-window 'find-file)
+                (funcall (if (= num 1) 'find-file-other-window 'find-file)
                          (car lst))
                 (let ((linenum (string-to-number (cadr lst))))
                   (when (and linenum (> linenum 0))
