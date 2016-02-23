@@ -1,7 +1,7 @@
 ;; {{ @see http://oremacs.com/2015/04/19/git-grep-ivy/
-(defun counsel-git-grep-or-find-api (fn git-cmd hint open-another-window &optional keyword)
+(defun counsel-git-grep-or-find-api (fn git-cmd hint num &optional keyword)
   "Apply FN on the output lines of GIT-CMD.  HINT is hint when user input.
-IF OPEN-ANOTHER-WINDOW is true, open the file in another window."
+IF NUM is 1, open the file in another window."
   (let ((default-directory (locate-dominating-file
                             default-directory ".git"))
         collection val lst)
@@ -19,26 +19,30 @@ IF OPEN-ANOTHER-WINDOW is true, open the file in another window."
     (when (and collection (> (length collection) 0))
       (setq val (if (= 1 (length collection)) (car collection)
                     (ivy-read (format " matching \"%s\":" keyword) collection)))
-      (funcall fn open-another-window val))))
+      (funcall fn num val))))
 
-(defun counsel-git-grep (&optional open-another-window)
+(defun counsel-git-grep (&optional num)
   "Grep in the current git repository.
-If OPEN-ANOTHER-WINDOW is not nil, results are displayed in new window."
+If NUM is not nil, results are displayed in new window."
   (interactive "P")
-  (let (fn)
-    (setq fn (lambda (open-another-window val)
-               (let ((lst (split-string val ":")))
-                 (funcall (if open-another-window 'find-file-other-window 'find-file)
-                          (car lst))
-                 (let ((linenum (string-to-number (cadr lst))))
-                   (when (and linenum (> linenum 0))
-                     (goto-char (point-min))
-                     (forward-line (1- linenum)))))))
+  (let ((fn (lambda (num val)
+              (let ((lst (split-string val ":")))
+                (funcall (if num 'find-file-other-window 'find-file)
+                         (car lst))
+                (let ((linenum (string-to-number (cadr lst))))
+                  (when (and linenum (> linenum 0))
+                    (goto-char (point-min))
+                    (forward-line (1- linenum)))))))
+        (keyword (if (region-active-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end))
+                   (read-string (concat "Enter grep pattern:" )
+                                (file-name-base (file-name-base (buffer-file-name)))))))
 
     (counsel-git-grep-or-find-api fn
                                   "git --no-pager grep --full-name -n --no-color -i -e \"%s\""
                                   "grep"
-                                  open-another-window)))
+                                  num
+                                  keyword)))
 
 (defun counsel-git-find-file (&optional open-another-window)
   "Find file in the current git repository.
