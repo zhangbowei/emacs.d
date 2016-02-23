@@ -1,13 +1,16 @@
 ;; {{ @see http://oremacs.com/2015/04/19/git-grep-ivy/
-(defun counsel-git-grep-or-find-api (fn git-cmd hint open-another-window)
+(defun counsel-git-grep-or-find-api (fn git-cmd hint open-another-window &optional keyword)
   "Apply FN on the output lines of GIT-CMD.  HINT is hint when user input.
 IF OPEN-ANOTHER-WINDOW is true, open the file in another window."
   (let ((default-directory (locate-dominating-file
                             default-directory ".git"))
-        (keyword (if (region-active-p)
-                     (buffer-substring-no-properties (region-beginning) (region-end))
-                   (read-string (concat "Enter " hint " pattern:" ))))
         collection val lst)
+
+    ;; if keyword is prepared, get keyword from UI
+    (unless keyword
+      (setq keyword (if (region-active-p)
+                        (buffer-substring-no-properties (region-beginning) (region-end))
+                      (read-string (concat "Enter " hint " pattern:" )))))
 
     (setq collection (split-string (shell-command-to-string (format git-cmd keyword))
                                    "\n"

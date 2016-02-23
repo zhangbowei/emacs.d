@@ -216,7 +216,7 @@
      (add-hook 'w3m-display-hook
                (lambda (url)
                  (let ((title (or w3m-current-title url)))
-                   (message "url=%s title=%s w3m-current-title=%s" url title w3m-current-title)
+                   ;; (message "url=%s title=%s w3m-current-title=%s" url title w3m-current-title)
                    (when w3m-global-keyword
                      ;; search keyword twice, first is url, second is your input,
                      ;; third is actual result
