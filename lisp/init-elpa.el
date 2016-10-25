@@ -1,7 +1,7 @@
 (require 'package)
 
 ;; You can set it to `t' to use safer HTTPS to download packages
-(defvar melpa-use-https-repo nil
+(defvar melpa-use-https-repo t
   "By default, HTTP is used to download packages.
 But you may use safer HTTPS instead.")
 
@@ -65,13 +65,8 @@ But you may use safer HTTPS instead.")
     (setq package-archives
           '(;; uncomment below line if you need use GNU ELPA
             ;; ("gnu" . "https://elpa.gnu.org/packages/")
-            ("melpa" . "https://melpa.org/packages/")
-            ("melpa-stable" . "https://stable.melpa.org/packages/")))
-  (setq package-archives
-        '(;; uncomment below line if you need use GNU ELPA
-          ;; ("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")
-          ("melpa-stable" . "http://stable.melpa.org/packages/")))
+            ("melpa" . "https://elpa.zilongshanren.com/melpa/")
+            ("melpa-stable" . "https://elpa.zilongshanren.com/melpa-stable/")))
   )
 
 
@@ -149,7 +144,7 @@ ARCHIVE is the string name of the package archive.")
 (require-package 'async)
 (require-package 'dash) ; required by string-edit
 ; color-theme 6.6.1 in elpa is buggy
-(require-package 'color-theme)
+(require-package 'color-theme-sanityinc-solarized)
 (require-package 'auto-compile)
 (require-package 'smex)
 (require-package 'avy)
